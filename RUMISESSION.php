@@ -2,14 +2,14 @@
 ini_set('display_errors', 1);
 ini_set('error_reporting', E_ALL);
 /**
- * るみセッション V1.0
+ * るみセッション V1.5
  */
 
 class RUMISESSION{
 	public $COOKIE_NAME = "SESSION";
 	public $SESSION_DATA = array();
 	public $SESSION_ID = "";
-	public $FILE_PATH = "/var/www/SESSION/SYABETTER/";
+	public $FILE_PATH = "/var/www/SESSION/";
 
 	public function RSESSION_START(){
 		if(!empty($_COOKIE[$this->COOKIE_NAME])){
@@ -28,12 +28,10 @@ class RUMISESSION{
 					}
 					else{
 						//JSONのえらーあり
-						echo "JSON ERR";
-						exit;
+						return false;
 					}
 				}else{
-					echo "FILE OPEN ERR";
-					exit;
+					return false;
 				}
 			}else{
 				//ファイルがない
@@ -82,6 +80,10 @@ class RUMISESSION{
 	public function RSESSION_SET($NAME, $VALUE){
 		if($this->SESSION_ID !== ""){
 			$this->SESSION_DATA = $this->SESSION_DATA += array($NAME => $VALUE);
+			
+			if(!$this->SESSION_DATA[$NAME]){
+				$this->RSESSION_DEL($NAME);
+			}
 
 			$file_handle = fopen($this->FILE_PATH.$this->SESSION_ID, "w");//ファイルを書き込みモードで開く
 			fwrite($file_handle, json_encode($this->SESSION_DATA));//ファイルへデータを書き込み
@@ -94,12 +96,10 @@ class RUMISESSION{
 			}
 			else{
 				//JSONのえらーあり
-				echo "JSON ERR";
-				exit;
+				return false;
 			}
 		}else{
-			echo "Ohhhhh ERR DA!!";
-			exit;
+			return false;
 		}
 	}
 
@@ -125,8 +125,7 @@ class RUMISESSION{
 		}
 		else{
 			//JSONのえらーあり
-			echo "JSON ERR";
-			exit;
+			return false;
 		}
 	}
 
