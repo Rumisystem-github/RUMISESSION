@@ -1,6 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('error_reporting', E_ALL);
 /**
  * るみセッション V1.5
  */
@@ -13,10 +11,12 @@ class RUMISESSION{
 
 	public function RSESSION_START(){
 		if(!empty($_COOKIE[$this->COOKIE_NAME])){
+			$SESSION_ID = preg_replace("/[^a-zA-Z0-9_\-\.]/", "", $_COOKIE[$this->COOKIE_NAME]);
+
 			//セッションがある
-			if(file_exists($this->FILE_PATH.$_COOKIE[$this->COOKIE_NAME])){
+			if(file_exists($this->FILE_PATH.$SESSION_ID)){
 				//ファイルが有る
-				$this->SESSION_ID = $_COOKIE[$this->COOKIE_NAME];
+				$this->SESSION_ID = $SESSION_ID;
 
 				$SESSION_FILE = file_get_contents($this->FILE_PATH.$this->SESSION_ID);
 
